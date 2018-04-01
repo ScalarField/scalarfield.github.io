@@ -1,0 +1,122 @@
+* {
+	text-align: center;
+	font-family: "Monaco", monospace;
+	color: #BABABA;
+}
+
+body {
+	background-color:#303038;
+}
+
+#page {
+	height: 100%;
+	position: relative;
+}
+
+header, footer {
+	background-color: hsl(220,10%,15%);
+}
+
+header {
+	display: block;
+	height: 15%;
+	width: 100%;
+	position: relative;
+	border-radius: 10px;
+	box-shadow: 0px 2px 5px hsl(220,10%,10%);
+}
+
+header:hover {
+	background-color: hsl(240,10%,25%);
+}
+
+#scalar {
+	font-family: "Andale Mono", monospace;
+	color: hsl(200,50%,50%);
+}
+
+#field {
+	font-family: "Avenir", sans-serif;
+	color: hsl(180,40%,45%);
+}
+
+.subpage {
+	font-family: "Monaco", monospace;
+	color: hsl(30, 50%, 50%);
+}
+
+footer {
+	height: 2%;
+	width: 100%;
+	position: absolute;
+	top: 98%;
+	left: 0%;
+	border-radius: 5px;
+	color:#565656;
+	box-shadow: 0px 2px 3px hsl(220,10%,10%);
+}
+
+h1 {
+	font-size: 50px;
+	font-size: 7vmin;
+	width: 100%;
+	position: absolute;
+	margin: 0px;
+}
+
+h6 {
+	height: 2%;
+	width: 100%;
+	position: absolute;
+	margin: 0px;
+	top: 0%;
+	left: 0%;
+}
+
+#content {
+	position: absolute;
+	width: 100%;
+	height: 80%;
+	top: 15%;
+	left: 0%;
+	margin-top: 1.5%;
+	margin-bottom: 1.5%;
+	background-color: hsl(240,10%,15%);
+	overflow-y:auto;
+	border-radius: 10px;
+	/*font-size: 1.75vh*/
+	box-shadow: 0px 2px 5px hsl(220,10%,10%);
+}
+
+.post {
+	background-color: hsl(220,15%,25%);
+	margin: 1%; 
+	border-radius: 10px;
+	box-shadow: 0px 2px 2px hsl(220,10%,10%);
+	padding: 1% 0%;
+}
+
+.post > *:not(h2) {
+	margin: 20px 5%;
+}
+
+.post img {
+	max-width: 90%;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.underline {
+	text-decoration: underline;
+}
+
+.left {
+	text-align: left;
+}
+
