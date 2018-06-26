@@ -4,6 +4,7 @@
 		<meta charset="utf-8" />
 		<title>Scalar Field | Programs</title>
 		<link rel="stylesheet" href="css/page.css" />
+		<script src="https://scalarfield.github.io/js/tools/memekit.js"></script>
 	</head>
 	<body>
 		<div id="page"><!--Page Wrapper-->
@@ -20,9 +21,12 @@
 		
 			<div id="content"><!-- Page Content-->
 				<div class="post">
-					<h2 class="underline">I'm Doing Stuff</h3>
+					<h2 class="underline">MemeKit</h3>
 					<p class="left">
-						I'm learning a bit of JavaFX. Hopefully I make something worth putting here soon.
+						A library for messing with people in JavaScript. It's in its really early stages now,
+						but I'll be frequently adding to it.
+						Check it out <a href="https://github.com/ScalarField/MemeKit">here</a>
+						or <button type="button" id="mktry">see an example</button>
 					</p>
 				</div>
 				<div class="post">
@@ -48,5 +52,13 @@
 			
 		</div><!--Page Wrapper End-->
 		<script src="js/pageRedirect.js"></script>
+		<script>
+let mk = new MemeKit();
+let b = document.getElementById("mktry");
+b.onclick = ()=>{
+	mk.error();
+	setTimeout(mk.rickroll, 3000);
+}
+		</script>
 	</body>
 </html>	
