@@ -1,7 +1,7 @@
 class MemeKit{
 	
 	constructor(){
-		this.memeCount = 6; //Update this system later with dynamic count
+		this.memeCount = 23; //Update this system later with dynamic count
 		this.errorPresets = 
 		{
 			"standard" : "An error occurred. Please try again.",
