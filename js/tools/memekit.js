@@ -1,3 +1,6 @@
+let alphabet = "abcdefghijklmnopqrstuvwxyz";
+let cipher = "";
+
 class MemeKit{
 	
 	constructor(){
@@ -10,7 +13,13 @@ class MemeKit{
 			"input" : "Suggest a joke message at: transcendentalbob@gmail.com",
 			"wenceslas" : "Good King Wenceslas look'd out, On the Feast of Stephen, when the snow lay round about, Deep and crisp and even.",
 			"quickmath" : "2 + 2 ≠ 4 - 1 ... Internet users, please learn some math :|",
-			"profit" : "Step 1: Click on error message \nStep 2: ???? \nStep 3: Profit \nStep 3: Profit"
+			"profit" : "Step 1: Click on error message \nStep 2: ???? \nStep 3: Profit \nStep 3: Profit",
+			"grammar" : "A non sequitur walks into a bar. This year's potato harvest is great.",
+			"cipher" : "OHO JFV GIEUUJ TFBRIG BF AGEAL BRHP AHYRIG? JFV CVPB TI TFGIO.",
+			"goals" : '"Everyone can reach his goal, if he can think, wait and fast." -- Siddartha from the Hermann Hesse novel of the same name.',
+			"nickels" : "If I had a nickel for every star in the observable universe (based on current estimates), I could cover the Earth in nickels and buy a new car with the leftovers.",
+			"disfluency" : "Apparently disfluency in speech has been linked to higher information retention in the audience...",
+			"emoticons" : "Wikipedia has a list of emoticons. Here's the one for Homer Simpson: ~(_8^(I)"
 		};
 	}
 	
@@ -110,5 +119,62 @@ class MemeKit{
 		let keys = Object.keys(obj);
     	return obj[keys[ keys.length * Math.random() << 0]];
 	}
+	
+	randomMASC(){
+		let alpha = alphabet.split("");
+		let cipher = [];
+		while(alpha.length > 0){
+			let i = Math.floor(alpha.length*Math.random());
+			cipher.push(alpha[i]);
+			alpha.splice(i, 1);
+		}
+		return cipher.join("");
+	}
+	
+	isValidCipher(ct){
+		if(ct.length !== 26){
+			return false;
+		}
+		for(let i=0;i<ct.length;i++){
+			let regexp = new RegExp(ct.charAt(i), 'g');
+			if( ((alphabet.match(regexp) || []).length) !== 1 ){
+				return false;
+			}
+			let regexp2 = new RegExp(alphabet.charAt(i), 'g');
+			if( ((ct.match(regexp2) || []).length) !== 1 ){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	inputCipher(ct="random"){
+		if(!this.isValidCipher(ct)){
+			cipher = this.randomMASC();
+		} else {
+			cipher = ct;
+		}
+		document.querySelectorAll("[type=text], textarea").forEach( (e)=>{
+			e.oninput = (event)=>{
+				let key = e.value.charAt(e.value.length-1);
+				let letters = "qwertyuioplkjhgfdsazxcvbnmMNBVCXZASDFGHJKLPOIUYTREWQ";
+					if(letters.indexOf(key) > -1){
+					let plainLetter = key.toLowerCase();
+					let cipherLetter = cipher.charAt(alphabet.indexOf(plainLetter));
+					if(key.toLowerCase() !== key){
+						cipherLetter = cipherLetter.toUpperCase();
+					}
+					e.value = e.value.substring(0, e.value.length-1) + cipherLetter;
+				}
+			}
+			e.onkeydown = (event)=>{
+				if(event.key === "Backspace" && e.value.length === 1){
+					e.value = "";
+				}
+			}
+		});
+		
+	}
+
 	
 }
