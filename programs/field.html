@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Generic Field Simulator</title>
+	</head>
+	<body>
+		<canvas width="600" height="600" style="border: 1px solid;"></canvas>
+		<script>
+
+let c = document.querySelector("canvas");
+let f = c.getContext("2d");
+
+let mouse = {x: 0, y: 0};
+
+const fieldConstant = 1000;
+const waveSpeed = 0.5;
+const vectorSpacing = 20;
+const maxMagnitude = 50;
+
+let object = 
+	{
+		x: 100,
+		y: 300,
+		mass: 200,
+		maxMass: 20000,
+		minMass: 200,
+		size: 10,
+		color: "#550000",
+		draw(ctx){
+			ctx.beginPath();
+			ctx.fillStyle = this.color;
+			ctx.arc(this.x, this.y, this.size, 0, 2*Math.PI);
+			ctx.fill();
+			ctx.closePath();
+		}
+	};
+	
+let fieldVectors = [];
+for(let i=0;i<c.width/vectorSpacing;i++){
+	let row = [];
+	for(let j=0;j<c.width/vectorSpacing;j++){
+		row.push(fieldVector(j*vectorSpacing, i*vectorSpacing, object));
+	}
+	fieldVectors.push(row);
+}
+
+window.onmousemove = (event)=>{
+	let r = c.getBoundingClientRect();
+	let mx = event.clientX - r.left;
+	let my = event.clientY - r.top;
+	mouse = {x: mx, y: my};
+}
+
+window.onmousedown = (event)=>{
+	if(object.mass <= object.maxMass){
+		object.mass += 200;
+	}
+}
+
+window.onmouseup = (event)=>{
+	if(object.mass >= object.minMass){
+		object.mass -= 200;
+	}
+}
+
+let updateloop = setInterval(()=>{
+	let copy = Object.assign({}, object);
+	update(copy);
+}, 1000/30);
+let renderloop = setInterval(render, 1000/60);
+
+function render(){
+	f.clearRect(0, 0, c.width, c.height);
+	object.x = mouse.x;
+	object.y = mouse.y;
+	object.draw(f);
+	for(let x=0;x<c.width;x+=vectorSpacing){
+		for(let y=0;y<c.height;y+=vectorSpacing){
+			let v = fieldVectors[y/vectorSpacing][x/vectorSpacing];
+			//console.log(v);
+			drawVector(x, y, v.x, v.y);
+		}
+	}
+	//update(object);
+}
+
+function update(o){
+	let distances = [];
+	for(let x=0;x<c.width;x+=vectorSpacing){
+		for(let y=0;y<c.height;y+=vectorSpacing){
+			let dx = x - object.x, dy = y - object.y;
+			let d = Math.sqrt(dx**2 + dy**2);
+			distances.push([Math.floor(d/10)*10, y/vectorSpacing, x/vectorSpacing]);
+		}
+	}
+	let dSet = new Set(distances.map((x)=>x[0]));
+	for(let dist of dSet){
+		let cluster = distances.filter((d)=>(d[0]==dist));
+		setTimeout( ()=>{
+			for(let i=0;i<cluster.length;i++){
+				//console.log(cluster);
+				fieldVectors[cluster[i][1]][cluster[i][2]] = fieldVector(cluster[i][2]*vectorSpacing, cluster[i][1]*vectorSpacing, o);
+			}
+		}, dist/waveSpeed);
+	}
+}
+
+function fieldVector(x, y, o){
+	let dx = x - o.x, dy = y - o.y;
+	let magnitude = fieldConstant*o.mass/(dx**2 + dy**2);
+	if(magnitude > maxMagnitude){
+		magnitude = maxMagnitude;
+	}
+	
+	let angle = Math.atan(dy/dx);
+	if(dx <  0){
+		angle += Math.PI;
+	} else if(dx === 0 && dy < 0){
+		angle += Math.PI;
+	}
+	return {x: -1*magnitude*Math.cos(angle), y: -1*magnitude*Math.sin(angle)};
+}
+
+function drawVector(x, y, dx, dy){
+	f.beginPath();
+	f.moveTo(x, y);
+	f.lineTo(x+dx, y+dy);
+	f.stroke();
+	f.closePath();
+}
+
+
+		</script>
+	</body>
+</html>
