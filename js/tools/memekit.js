@@ -1,26 +1,36 @@
 let alphabet = "abcdefghijklmnopqrstuvwxyz";
 let cipher = "";
 
+let symbolChars = "abcdefghijklmnopqrstuvwxyz?!";
+let asciiFont = ["vhvhh", "uhuhu", "vgggv", "uhhhu", "vgvgv", "vgvgg", "fgjhe", //abcdefg
+				 "hhvhh", "v444v", "v44ks", "hikih", "ggggv", "hrlhh", "hpljh", //hijklmn
+				 "ehhhe", "uhugg", "uiiu1", "uhuih", "fge1u", "v4444", "hhhhe", //opqrstu
+				 "hhaa4", "hhlrh", "ha4ah", "ha444", "v248v", "e1604", "44404"]//vwxyz?!
+
+//0123456789
+//abcdefghij -- 1
+//klmnopqrst -- 2
+//uv		 -- 3
+
 class MemeKit{
 	
 	constructor(){
 		this.memeCount = 23; //Update this system later with dynamic count
-		this.errorPresets = 
-		{
-			"standard" : "An error occurred. Please try again.",
-			"shakespeare" : "The fault, dear User, is not in my code, but in yourself, that you fell for this.",
-			"rickroll" : "Never gonna give you up. Never gonna let you down. Never gonna run around and desert you",
+		this.errorPresets = {
+			"standard": "An error occurred. Please try again.",
+			"shakespeare": "The fault, dear User, is not in my code, but in yourself, that you fell for this.",
+			"rickroll": "Never gonna give you up. Never gonna let you down. Never gonna run around and desert you",
 			"input" : "Suggest a joke message at: transcendentalbob@gmail.com",
 			"wenceslas" : "Good King Wenceslas look'd out, On the Feast of Stephen, when the snow lay round about, Deep and crisp and even.",
 			"quickmath" : "2 + 2 ≠ 4 - 1 ... Internet users, please learn some math :|",
 			"profit" : "Step 1: Click on error message \nStep 2: ???? \nStep 3: Profit \nStep 3: Profit",
 			"grammar" : "A non sequitur walks into a bar. This year's potato harvest is great.",
 			"cipher" : "OHO JFV GIEUUJ TFBRIG BF AGEAL BRHP AHYRIG? JFV CVPB TI TFGIO.",
-			"goals" : '"Everyone can reach his goal, if he can think, wait and fast." -- Siddartha from the Hermann Hesse novel of the same name.',
+			"goals" : "\"Everyone can reach his goal, if he can think, wait and fast.\" -- Siddartha from the Hermann Hesse novel of the same name.",
 			"nickels" : "If I had a nickel for every star in the observable universe (based on current estimates), I could cover the Earth in nickels and buy a new car with the leftovers.",
 			"disfluency" : "Apparently disfluency in speech has been linked to higher information retention in the audience...",
 			"emoticons" : "Wikipedia has a list of emoticons. Here's the one for Homer Simpson: ~(_8^(I)"
-		};
+		}
 	}
 	
 	rickroll(){
@@ -175,6 +185,36 @@ class MemeKit{
 		});
 		
 	}
-
+	
+	asciiArt(message="random"){
+		let text;
+		if(message === "random"){
+			text = this.randomPropertyOf(this.errorPresets);
+		} else if(message in this.errorPresets){
+			text = this.errorPresets[message];
+		} else {
+			text = message;
+		}
+		let textlines = text.split("`");
+		let textholder = "<p style='font-family:monospace;'>";
+		let textend = "</p>";
+		let asciiString = "";
+		for(let text of textlines){
+			text = text.toLowerCase();
+			for(let i=0;i<5;i++){
+				for(let letter of text){
+					if(symbolChars.indexOf(letter) >= 0){
+						asciiString += Number(parseInt(asciiFont[symbolChars.indexOf(letter)].charAt(i), 32)).toString(2).padStart(5, '0').replace(/1/g, "*").replace(/0/g, "&nbsp;") + "&nbsp;";
+					} else {
+						asciiString += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+					}
+				}	
+				//asciiString.replace(/#/g, "\0o140");
+				asciiString += "<br />";
+			}
+			asciiString += "<br />"
+		}
+		return textholder+asciiString+textend;
+	}
 	
 }
