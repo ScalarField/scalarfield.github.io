@@ -2,8 +2,8 @@ let alphabet = "abcdefghijklmnopqrstuvwxyz";
 let cipher = "";
 
 let symbolChars = "abcdefghijklmnopqrstuvwxyz?!";
-let asciiFont = ["vhvhh", "uhuhu", "vgggv", "uhhhu", "vgvgv", "vgvgg", "fgjhe", //abcdefg
-				 "hhvhh", "v444v", "v44ks", "hikih", "ggggv", "hrlhh", "hpljh", //hijklmn
+let asciiFont = ["ehvhh", "uhuhu", "fgggf", "uhhhu", "vgvgv", "vgvgg", "fgjhe", //abcdefg
+				 "hhvhh", "v444v", "v22ic", "hikih", "ggggv", "hrlhh", "hpljh", //hijklmn
 				 "ehhhe", "uhugg", "uiiu1", "uhuih", "fge1u", "v4444", "hhhhe", //opqrstu
 				 "hhaa4", "hhlrh", "ha4ah", "ha444", "v248v", "e1604", "44404"]//vwxyz?!
 
@@ -186,7 +186,7 @@ class MemeKit{
 		
 	}
 	
-	asciiArt(message="random"){
+	asciiArt(message="random", c="*"){
 		let text;
 		if(message === "random"){
 			text = this.randomPropertyOf(this.errorPresets);
@@ -204,7 +204,7 @@ class MemeKit{
 			for(let i=0;i<5;i++){
 				for(let letter of text){
 					if(symbolChars.indexOf(letter) >= 0){
-						asciiString += Number(parseInt(asciiFont[symbolChars.indexOf(letter)].charAt(i), 32)).toString(2).padStart(5, '0').replace(/1/g, "*").replace(/0/g, "&nbsp;") + "&nbsp;";
+						asciiString += Number(parseInt(asciiFont[symbolChars.indexOf(letter)].charAt(i), 32)).toString(2).padStart(5, '0').replace(/1/g, c).replace(/0/g, "&nbsp;") + "&nbsp;";
 					} else {
 						asciiString += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 					}
