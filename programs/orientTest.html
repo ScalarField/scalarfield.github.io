@@ -23,16 +23,17 @@ function draw(){
 	f.closePath();
 }
 
-window.deviceorientation = (event)=>{
+function handler(event){
 	let xTilt = event.beta/2 + 90;
 	let yTilt = event.gamma + 90;
 	
 	x = 400*xTilt/180;
 	y = 400*yTilt/180;
 	
-	draw();
-	
+	draw();	
 }
+
+window.addEventListener("deviceorientation", handler);
 
 		</script>
 </html>
