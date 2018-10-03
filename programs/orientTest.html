@@ -25,10 +25,10 @@ function draw(){
 }
 
 function handler(event){
-	let xTilt = event.beta/2 + 90;
-	let yTilt = event.gamma + 90;
+	let yTilt = event.beta + 180;
+	let xTilt = event.gamma;
 	
-	x = 400*xTilt/180;
+	x = 400*xTilt/360;
 	y = 400*yTilt/180;
 	
 	draw();	
