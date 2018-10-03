@@ -18,15 +18,15 @@ draw();
 function draw(){
 	f.clearRect(0,0, 400,400);
 	f.beginPath();
-	f.fillStyle="green";
+	f.fillStyle="purple";
 	f.arc(x, y, 20, 0, 2*Math.PI);
 	f.fill();
 	f.closePath();
 }
 
 function handler(event){
-	let xTilt = event.beta;
-	let yTilt = event.gamma;
+	let xTilt = event.gamma;
+	let yTilt = event.beta;
 	
 	x = 200 + xTilt;
 	y = 200 + yTilt;
