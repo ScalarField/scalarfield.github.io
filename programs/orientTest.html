@@ -1,0 +1,38 @@
+<html>
+	<head>
+		<title>
+		Orientation Test
+		</title>
+	</head>
+	<body>
+		<canvas width="400" height="400" style="border:1px solid"></canvas>
+		<script>
+
+let c = document.querySelector("canvas");
+let f = c.getContext("2d");
+
+let x = 200, y = 200;
+
+draw();
+
+function draw(){
+	f.clearRect(0,0, 400,400);
+	f.beginPath();
+	f.arc(x, y, 20, 0, 2*Math.PI);
+	f.fill();
+	f.closePath();
+}
+
+window.deviceorientation = (event)=>{
+	let xTilt = event.beta/2 + 90;
+	let yTilt = event.gamma + 90;
+	
+	x = 400*xTilt/180;
+	y = 400*yTilt/180;
+	
+	draw();
+	
+}
+
+		</script>
+</html>
