@@ -18,7 +18,7 @@ draw();
 function draw(){
 	f.clearRect(0,0, 400,400);
 	f.beginPath();
-	f.fillStyle="orange";
+	f.fillStyle="black";
 	f.arc(x, y, 20, 0, 2*Math.PI);
 	f.fill();
 	f.closePath();
@@ -28,8 +28,13 @@ function handler(event){
 	let xTilt = event.gamma;
 	let yTilt = event.beta;
 	
-	x = 200 + 200*xTilt/90;
-	y = 200 + 200*yTilt/180;
+	if(xTilt > 45){xTilt = 45;}
+	if(xTilt < -45){xTilt = -45;}
+	if(yTilt > 45){yTilt = 45;}
+	if(yTilt < -45){yTilt = -45;}
+	
+	x = 200 + 200*xTilt/45;
+	y = 200 + 200*yTilt/45;
 	
 	draw();	
 }
