@@ -29,7 +29,8 @@ class MemeKit{
 			"goals" : "\"Everyone can reach his goal, if he can think, wait and fast.\" -- Siddartha from the Hermann Hesse novel of the same name.",
 			"nickels" : "If I had a nickel for every star in the observable universe (based on current estimates), I could cover the Earth in nickels and buy a new car with the leftovers.",
 			"disfluency" : "Apparently disfluency in speech has been linked to higher information retention in the audience...",
-			"emoticons" : "Wikipedia has a list of emoticons. Here's the one for Homer Simpson: ~(_8^(I)"
+			"emoticons" : "Wikipedia has a list of emoticons. Here's the one for Homer Simpson: ~(_8^(I)",
+			"bruh" : "what"
 		}
 	}
 	
