@@ -15,7 +15,7 @@ let asciiFont = ["ehvhh", "uhuhu", "fgggf", "uhhhu", "vgvgv", "vgvgg", "fgjhe", 
 class MemeKit{
 	
 	constructor(){
-		this.memeCount = 23; //Update this system later with dynamic count
+		this.memeCount = 322; //Update this system later with dynamic count
 		this.errorPresets = {
 			"standard": "An error occurred. Please try again.",
 			"shakespeare": "The fault, dear User, is not in my code, but in yourself, that you fell for this.",
