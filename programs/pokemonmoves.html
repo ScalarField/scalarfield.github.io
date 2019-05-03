@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Pokemon Move Plots</title>
+		<style>
+
+body{
+	text-align: center;
+}		
+
+div.plot {
+	margin: 0px auto;
+	width: 700px;
+	height: 700px;
+}
+		</style>
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		<script>
+		
+class MoveVector{
+	
+	constructor(power, acc, pp){
+		this.power = power;
+		this.accuracy = acc;
+		this.pp = pp;
+		if(power === null){
+			this.power = 0;
+		}
+		if(acc === null){
+			this.accuracy = 0;
+		}
+		if(this.pp === null){
+			this.pp = 0;
+		}
+	}
+	
+}
+
+		</script>
+	</head>
+	<body>
+		<div class="plot" id="accVsPower"></div>
+		<div class="plot" id="ppVsPower"></div>
+		<div class="plot" id="ppVsAcc"></div>
+		<canvas width="900" height="900" style="border: 1px solid;"></canvas>
+		<script>
+
+let data = [];
+fetch("data/skills.json")
+	.then( (response)=>{
+		return response.json();
+	})
+	.then( (json)=>{
+		data = json;
+		main();
+	});
+
+function main(){
+	let vectors = getMoveVectors(data); //Put all the numbers in a convenient place
+	
+	//Canvas setup
+	let c = document.querySelector('canvas');
+	let f = c.getContext('2d');
+	
+	//Lists
+	let powers = vectors.map( (v)=>v.power );
+	let accuracies = vectors.map( (v)=>v.accuracy );
+	let pps = vectors.map( (v)=>v.pp );
+	
+	//2D Scatter Plots
+	makePlot(powers, accuracies, [-10, 265, 20], [-5, 110, 10],
+		"Base Power", "Accuracy", "accVsPower");
+		
+	makePlot(powers, pps, [-10, 265, 20], [-4, 45, 5],
+		"Base Power", "PP", "ppVsPower");
+		
+	makePlot(accuracies, pps, [-5, 110, 10], [-4, 45, 5],
+		"Accuracies", "PP", "ppVsAcc");
+
+	//Barycentric Projection Scatter Plot
+	
+		//Plot Vertices
+	let r = 400, cx = c.width/2, cy = c.height*0.4;
+	let r1 = {x: cx - r*Math.sqrt(3)/2, y: cy - r/2};
+	let r2 = {x: cx + r*Math.sqrt(3)/2, y: cy - r/2};
+	let r3 = {x: cx, y: cy + r};
+	
+	
+		//Normalize and prepare data (n = normalized)
+	let nPowers	= powers.map( (v)=>v/255 ); //255 = max power
+	let nAccuracies = accuracies.map( (v)=>v/100 ); //100 = max accuracy
+	let nPPs = pps.map( (v)=>v/40 ); //40 = max PP
+	let dataset = freqData([nPowers, nAccuracies, nPPs]);
+	let maxFreq = dataset[3].slice(0).sort( (a, b)=>b-a )[0];
+	let colorMap = (n)=>{
+		let hue = 240*Math.log(n)/Math.log(maxFreq);
+		return `hsla(${hue}, 50%, 50%, 0.6)`
+	}
+			//Get Projected Coordinates
+	let points = transpose([dataset[0], dataset[1], dataset[2]]);
+	console.log( points[0] );
+	points = points.map( (v)=>{
+		let total = v[0]+v[1]+v[2];
+		return v.map( (i)=>i/total );
+	});
+	
+	
+		//Draw Plot
+			
+			//Triangle
+	f.beginPath();
+	f.moveTo(r1.x, r1.y);
+	f.lineTo(r2.x, r2.y);
+	f.lineTo(r3.x, r3.y);
+	f.lineTo(r1.x, r1.y);
+	f.stroke();
+	f.closePath();
+	
+			//Points
+	let size = 10;
+	for(let i=0;i<points.length;i++){
+		let p = points[i];
+		//Get barycentric coordinates
+		let bx = p[0]*r1.x + p[1]*r2.x + p[2]*r3.x;
+		let by = p[0]*r1.y + p[1]*r2.y + p[2]*r3.y;
+		f.fillStyle = colorMap(dataset[3][i]);
+		f.fillRect(bx-size/2, by-size/2, size, size);
+	}
+	
+		//Text
+	f.font = "24px Courier"
+	f.fillStyle="black"
+	f.fillText("Power", r1.x-60, r1.y-20);
+	f.fillText("Accuracy", r2.x-60, r2.y-20);
+	f.fillText("PP", r3.x-14, r3.y+40);
+	
+}
+
+//Helper functions
+
+function makePlot(list1, list2, axis1, axis2, heading1, heading2, divID){
+	let PAdata = freqData([list1, list2]);
+	//console.log(PAdata);
+	let maxFreq = PAdata[2].slice(0).sort( (a, b)=>b-a )[0];
+	let colorMap = (n)=>{
+		let hue = 240*Math.log(n)/Math.log(maxFreq);
+		return `hsl(${hue}, 50%, 50%)`
+	}
+	
+	let dataset = {
+		x: PAdata[0],
+		y: PAdata[1],
+		mode: 'markers',
+		marker: {
+			size: 9,
+			color: PAdata[2].map( (v)=>colorMap(v) )
+		},
+		type: 'scatter'
+	}
+	
+	layout = {
+		xaxis: {
+			title: heading1,
+			range: [axis1[0], axis1[1]],
+			dtick: axis1[2]
+		},
+		yaxis: {
+			title: heading2,
+			range: [axis2[0], axis2[1]],
+			dtick: axis2[2]
+		},
+		title: `${heading2} vs. ${heading1}`
+	}
+	
+	Plotly.newPlot(divID, [dataset], layout);
+}
+
+function getMoveVectors(data){
+	return data.map( (m)=>new MoveVector(m.power, m.accuracy, m.pp));
+}
+
+function freqData(dataLists){
+	let points = transpose(dataLists);
+	let pointSet = [];
+	let freqList = [];
+	for(let i=0;i<points.length;i++){
+		let b = contains(pointSet, points[i])
+		if(b >= 0){
+			freqList[b]++;
+		} else {
+			pointSet.push(points[i]);
+			freqList.push(1);
+		}
+	}
+	let lists = transpose(pointSet);
+	lists.push(freqList);
+	return lists;
+}
+
+function arraysEqual(arr1, arr2){
+	if(arr1.length !== arr2.length){
+		return false;
+	}
+	for(let i=0;i<arr1.length;i++){
+		if(arr1[i] !== arr2[i]){
+			return false;
+		}
+	}
+	return true;
+}
+
+function transpose(dataLists){
+	let transpose = [];
+	for(let i=0;i<dataLists[0].length;i++){
+		transpose.push(Array.from({length: dataLists.length}, (v, j)=>(dataLists[j][i]) ));
+	}
+	return transpose;
+}
+
+function contains(arr, point){
+	for(let i=0;i<arr.length;i++){
+		if( arraysEqual(arr[i], point) ){
+			return i;
+		}
+	}
+	return -1;
+}
+
+		</script>
+	</body>
+</html>
